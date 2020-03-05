@@ -9,7 +9,49 @@
 <body>
     <h1>Asynchronous JavaScript</h1>
     <script>
-        
+        const getIDS = new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve([100, 200, 300, 400]);
+                    //reject([1,2,3])
+                }, 1500);
+            });
+
+            const getSumOfAll = (element) => {
+                return new Promise((resolve, reject) => {
+                    setTimeout((el) => {
+                        resolve([(el.reduce((preValue,nextValue) => {
+                            return preValue+nextValue;
+                        })),el.length]);
+                    },1500,element);
+                })
+            }
+
+            const getAverage = (sum,count) => {
+                return new Promise((resolve, reject) => {
+                    setTimeout((sum,count) => {
+                        resolve(sum/count);
+                    },1500,sum,count);
+                })
+            }
+
+            getIDS
+                .then(IDs => {
+                    console.log(IDs);
+                    return getSumOfAll(IDs);
+                })
+                .then((allSum) => {
+                    console.log(`sum is ${allSum[0]} and count is ${allSum[1]}`);
+                    return getAverage(allSum[0],allSum[1]);
+                })
+                .then(avg => {
+                    console.log(avg);
+                })
+                .catch(IDs => {
+                    IDs.forEach(element => {
+                        console.log('Error!');
+                    });
+                })
+
     </script>
 </body>
 </html>
